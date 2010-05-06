@@ -1,6 +1,8 @@
 package domein;
 
 import java.awt.Color;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Pion {
 
@@ -8,6 +10,7 @@ public class Pion {
     private String symbool;
     private vak huidig;
     private vak start;
+    private Kleuren kleur;
 
     public void setStart(vak start) {
         this.start = start;
@@ -17,7 +20,14 @@ public class Pion {
     public vak getStart() {
         return start;
     }
-    private Color kleur;
+
+    public Pion(String kl)//vak strt, vak hui)
+    {
+
+        SetKleurString(kl.toString());
+        //start = strt;
+        //huidig = hui;
+    }
 
     public Pion(String sym, String kl)//vak strt, vak hui)
     {
@@ -33,7 +43,7 @@ public class Pion {
 
     public void SetKleurString(String kleur) {
         this.kleurString = kleur;
-        this.kleur = Color.getColor(kleur);
+        this.kleur = Kleuren.valueOf(kleur.toLowerCase());
     }
 
     public String getSymbool() {
@@ -45,11 +55,24 @@ public class Pion {
     }
 
     public Color getKleur() {
-        return kleur;
-    }
 
-    public void setKleur(Color kleur) {
-        this.kleur = kleur;
+        switch (this.kleur) {
+            case rood:
+                return Color.RED;
+               
+            case blauw:
+                return Color.blue;
+                
+            case geel:
+                return Color.yellow;
+               
+            case groen:
+                return Color.green;
+               
+            case zwart:
+                return Color.black; 
+        }
+        return Color.cyan;
     }
 
     public vak getHuidig() {
@@ -62,5 +85,10 @@ public class Pion {
 
     public String toString() {
         return "[" + getSymbool() + "]";
+    }
+
+    enum Kleuren {
+
+        rood, blauw, geel, groen, zwart
     }
 }

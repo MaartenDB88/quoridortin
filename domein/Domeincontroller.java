@@ -10,7 +10,10 @@ public class Domeincontroller {
     private PersistentieBeheerder persistentieBeheerder;
     private Spel spel;
     private DomeinBeheerder db;
-    private static Domeincontroller dc;
+
+    public Spel getSpel() {
+        return spel;
+    }
 
     public Domeincontroller() {
         //   persistentieBeheerder = PersistentieBeheerder.getInstance();
@@ -60,6 +63,10 @@ public class Domeincontroller {
 
     public List<String[]> getPionInfo() {
         return spel.getPionInfo();
+    }
+    public List<Pion> getPionen()
+    {
+        return db.getPion();
     }
 
     public boolean goToNextGameStep() {

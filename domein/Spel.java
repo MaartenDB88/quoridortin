@@ -9,11 +9,26 @@ public class Spel {
     private Spelbord bord;
     private int _aantalSpelers;
     private List<Speler> spelers;
-    private List<Pion> pionnen;
     private vak[] lijstZetVakken = new vak[4];
     private int aantalBeurten;
     private Speler CurrentPlayer;
     private int dimensie;
+
+    public DomeinBeheerder getDb() {
+        return db;
+    }
+
+    public void setDb(DomeinBeheerder db) {
+        this.db = db;
+    }
+
+    public int getDimensie() {
+        return dimensie;
+    }
+
+    public void setDimensie(int dimensie) {
+        this.dimensie = dimensie;
+    }
 
     public Spel(int d) {
         db = new DomeinBeheerder();
@@ -33,10 +48,14 @@ public class Spel {
     public vak[][] getSpeelBord() {
         return bord.getSpeelBord();
     }
-
-    public List<Pion> getPion() {
-        return pionnen;
+    public vak getVak(int x, int y)
+    {
+        if(x >= dimensie ||y >=dimensie )
+                return null;
+        return bord.getSpeelBord()[x][y];
     }
+
+
     //public List<String> getLijstSG(){
     //return db.getLijstSG
     //}
@@ -83,6 +102,7 @@ public class Spel {
     }
 
     void maakSpelers(List<Speler> spelers) {
+        
         this.spelers = spelers;
 
         int counter = 1;

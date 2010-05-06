@@ -10,45 +10,69 @@
  */
 package gui.grafisch;
 
+import domein.Domeincontroller;
 import domein.Pion;
-import domein.Spelbord;
+import domein.Speler;
 import domein.vak;
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.geom.Rectangle2D;
 
 /**
  *
  * @author Admin
  */
-public class BordPaneel extends javax.swing.JPanel implements MouseListener, MouseMotionListener {
+public class BordPaneel extends javax.swing.JPanel {
 
-    private Spelbord bord;
     private int breedte = 50;
     Graphics gr;
     vak vakUnderMouse;
+    boolean gameStarted = false;
+    Domeincontroller domeinC;
+    int dimensie = 9;
+    int offset = 2;
+    
+
+    public Domeincontroller getDomeinC() {
+        return domeinC;
+    }
+
+    public void setDomeinC(Domeincontroller domeinC) {
+        this.domeinC = domeinC;
+    }
+
+    public boolean isGameStarted() {
+        return gameStarted;
+    }
+
+    public void setGameStarted(boolean gameStarted) {
+        this.gameStarted = gameStarted;
+    }
 
     /** Creates new form BordPaneel */
     public BordPaneel() {
         initComponents();
 
-
-
-
     }
 
     public void paintComponent(Graphics g) {
         gr = g;
-        clearBoard();
-        paintHuidigBord(g);
+        paintGame();
 
+    }
+
+    private void paintGame() {
+        if (gameStarted) {
+            dimensie = domeinC.getSpel().getDimensie();
+            int breedteTest = this.getWidth() / dimensie;
+            int hoogteTest = this.getHeight() / dimensie;
+            breedte = (breedteTest > hoogteTest ? hoogteTest : breedteTest);
+            clearBoard();
+            drawBackground(gr);
+            paintHuidigBord(gr);
+        }
     }
 
     private void clearBoard() {
@@ -57,29 +81,36 @@ public class BordPaneel extends javax.swing.JPanel implements MouseListener, Mou
     }
 
     public void paintHuidigBord(Graphics g) {
-        g.setColor(Color.BLACK);
-        int x = 0;
-        for (int i = 0; i < 10; i++) {
-            g.drawRect(x, 0, 1, breedte * 9);
-            g.drawRect(0, x, breedte * 9, 1);
-            x += breedte;
+        for (Speler speler : domeinC.getSpel().getSpelers()) {
+            paintPion(speler.getPion());
         }
-        //Test pionnen
-        Pion pion = new Pion("", "");
-        pion.setKleur(Color.blue);
-        paintPion(new vak(breedte * 4, 0, false, null), pion, g);
-
-        pion.setKleur(Color.YELLOW);
-        paintPion(new vak(breedte * 4, breedte * 8, false, null), pion, g);
         if (vakUnderMouse != null) {
-            g.fillOval(vakUnderMouse.getX() + 2, vakUnderMouse.getY() + 2, breedte - 4, breedte - 4);
+            //g.setColor(Color.LIGHT_GRAY);
+            //     g.fillRect(vakUnderMouse.getX() * breedte + 2 + offset, vakUnderMouse.getY() * breedte + 2 + offset, breedte - 2, breedte - 2);
+           if(true)
+               g.setColor(Color.RED);
+           else
+               g.setColor(Color.GREEN);
+            gr.drawRoundRect(vakUnderMouse.getX() * breedte + offset, vakUnderMouse.getY() * breedte + offset, breedte, breedte, 5, 5);
+            
         }
 
     }
 
-    private void paintPion(vak vak, Pion pion, Graphics g) {
-        g.setColor(pion.getKleur());
-        g.fillOval(vak.getX() + 2, vak.getY() + 2, breedte - 4, breedte - 4);
+    private void drawBackground(Graphics g) {
+        g.setColor(Color.BLACK);
+
+        for (int i = 0; i < dimensie + 1; i++) {
+            g.drawRect(breedte * i + offset, 0 + offset, 1, breedte * dimensie);
+            g.drawRect(0 + offset, breedte * i + offset, breedte * dimensie, 1);
+
+        }
+    }
+
+    private void paintPion(Pion pion) {
+
+        gr.setColor(pion.getKleur());
+        gr.fillOval(pion.getHuidig().getX() * breedte + 2 + offset, pion.getHuidig().getY() * breedte + 2 + offset, breedte - 4, breedte - 4);
     }
 
     /** This method is called from within the constructor to
@@ -90,6 +121,12 @@ public class BordPaneel extends javax.swing.JPanel implements MouseListener, Mou
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+
+        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                formMouseMoved(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -103,35 +140,17 @@ public class BordPaneel extends javax.swing.JPanel implements MouseListener, Mou
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    public void mouseClicked(MouseEvent e) {
-        System.out.println(" mouseClicked");
-    }
+    private void formMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseMoved
+        vakUnderMouse = getVakUnderMouse(evt.getX(), evt.getY());
+        paintGame();
+//        this.repaint();
+    }//GEN-LAST:event_formMouseMoved
 
-    public void mousePressed(MouseEvent e) {
-        System.out.println(" mousePressed");
-    }
-
-    public void mouseReleased(MouseEvent e) {
-        vakUnderMouse = null;
-        repaint();
-    }
-
-    public void mouseEntered(MouseEvent e) {
-        System.out.println("mouseEntered");
-    }
-
-    public void mouseExited(MouseEvent e) {
-        System.out.println("mouseExited");
-    }
-
-    public void mouseDragged(MouseEvent e) {
-    }
-
-    public void mouseMoved(MouseEvent e) {
-        Pion pion = new Pion("", "");
-        vakUnderMouse = new vak(e.getX() - 20, e.getY() - 50, false, null);
-        this.repaint();
-
+    public vak getVakUnderMouse(int x, int y) {
+        if (domeinC == null || domeinC.getSpel() == null) {
+            return null;
+        }
+        return domeinC.getSpel().getVak(x / breedte, y / breedte);
 
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
