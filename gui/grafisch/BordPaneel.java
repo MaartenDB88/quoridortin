@@ -19,6 +19,8 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -33,7 +35,15 @@ public class BordPaneel extends javax.swing.JPanel {
     Domeincontroller domeinC;
     int dimensie = 9;
     int offset = 2;
-    
+    List<vak> vakken = new ArrayList<vak>();
+
+    public List<vak> getVakken() {
+        return vakken;
+    }
+
+    public void setVakken(List<vak> vakken) {
+        this.vakken = vakken;
+    }
 
     public Domeincontroller getDomeinC() {
         return domeinC;
@@ -72,9 +82,17 @@ public class BordPaneel extends javax.swing.JPanel {
             clearBoard();
             drawBackground(gr);
             paintHuidigBord(gr);
+            drawVakken();
         }
     }
 
+    private void drawVakken()
+    {
+        gr.setColor(Color.red);
+        for(vak v:vakken)
+        gr.fillRect(v.getX() * breedte + 2 + offset, v.getY() * breedte + 2 + offset, breedte - 2, breedte - 2);
+
+    }
     private void clearBoard() {
         gr.clearRect(0, 0, getWidth(), getHeight());
         this.repaint();

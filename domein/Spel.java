@@ -48,18 +48,17 @@ public class Spel {
     public vak[][] getSpeelBord() {
         return bord.getSpeelBord();
     }
-    public vak getVak(int x, int y)
-    {
-        if(x >= dimensie ||y >=dimensie )
-                return null;
+
+    public vak getVak(int x, int y) {
+        if (x >= dimensie || y >= dimensie) {
+            return null;
+        }
         return bord.getSpeelBord()[x][y];
     }
-
 
     //public List<String> getLijstSG(){
     //return db.getLijstSG
     //}
-
     public List<Speler> getSpelers() {
         return spelers;
     }
@@ -102,7 +101,7 @@ public class Spel {
     }
 
     void maakSpelers(List<Speler> spelers) {
-        
+
         this.spelers = spelers;
 
         int counter = 1;
@@ -141,10 +140,16 @@ public class Spel {
             if (CurrentPlayer.getPion().getHuidig().getY() == dimensie - 1) {
                 return true;
             }
-        }        
+        }
         nextPlayer();
 
         return false;
+    }
+
+    private void checkVak(vak vakToCheck, List<vak> vakken) {
+        if (!vakToCheck.isMuur()) {
+            vakken.add(vakToCheck);
+        }
     }
 
     private void nextPlayer() {
@@ -158,6 +163,35 @@ public class Spel {
 
     String getNextGameStep() {
         return "";
+    }
+
+    public List<vak> mogelijkeZetten(Pion pion) {
+        List<vak> vakken = new ArrayList<vak>();
+        vak[][] vakkenBord = bord.getSpeelBord();
+        int x = pion.getHuidig().getX();
+        int y = pion.getHuidig().getY();
+        //BOVEN
+        vak vakToCheck;
+        if (y != 0) {
+            vakToCheck = vakkenBord[x][y - 1];
+            checkVak(vakToCheck, vakken);
+        }
+        //ONDER
+        if (y+1 < dimensie) {
+            vakToCheck = vakkenBord[x][y + 1];
+            checkVak(vakToCheck, vakken);
+        }
+        //LINKS
+        if (x != 0) {
+            vakToCheck = vakkenBord[x - 1][y];
+            checkVak(vakToCheck, vakken);
+        }
+        //RECHTS
+        if (x+1 < dimensie) {
+            vakToCheck = vakkenBord[x + 1][y];
+            checkVak(vakToCheck, vakken);
+        }
+        return vakken;
     }
 }
 
