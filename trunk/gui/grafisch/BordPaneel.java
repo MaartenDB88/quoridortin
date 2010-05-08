@@ -21,6 +21,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -36,6 +37,15 @@ public class BordPaneel extends javax.swing.JPanel {
     int dimensie = 9;
     int offset = 2;
     List<vak> vakken = new ArrayList<vak>();
+    boolean setWall = false;
+
+    public boolean isWall() {
+        return setWall;
+    }
+
+    public void setWall(boolean setWall) {
+        this.setWall = setWall;
+    }
 
     public List<vak> getVakken() {
         return vakken;
@@ -73,6 +83,10 @@ public class BordPaneel extends javax.swing.JPanel {
 
     }
 
+    private void fillVak(vak v) {
+        gr.fillRect(v.getX() * breedte + 2 + offset, v.getY() * breedte + 2 + offset, breedte - 2, breedte - 2);
+    }
+
     private void paintGame() {
         if (gameStarted) {
             dimensie = domeinC.getSpel().getDimensie();
@@ -81,18 +95,20 @@ public class BordPaneel extends javax.swing.JPanel {
             breedte = (breedteTest > hoogteTest ? hoogteTest : breedteTest);
             clearBoard();
             drawBackground(gr);
+            drawMuren();
             paintHuidigBord(gr);
-            drawVakken();
+            drawMogelijkeZetten();
         }
     }
 
-    private void drawVakken()
-    {
-        gr.setColor(Color.red);
-        for(vak v:vakken)
-        gr.fillRect(v.getX() * breedte + 2 + offset, v.getY() * breedte + 2 + offset, breedte - 2, breedte - 2);
+    private void drawMogelijkeZetten() {
+        gr.setColor(Color.GREEN);
+        for (vak v : vakken) {
+            fillVak(v);
+        }
 
     }
+
     private void clearBoard() {
         gr.clearRect(0, 0, getWidth(), getHeight());
         this.repaint();
@@ -103,14 +119,9 @@ public class BordPaneel extends javax.swing.JPanel {
             paintPion(speler.getPion());
         }
         if (vakUnderMouse != null) {
-            //g.setColor(Color.LIGHT_GRAY);
-            //     g.fillRect(vakUnderMouse.getX() * breedte + 2 + offset, vakUnderMouse.getY() * breedte + 2 + offset, breedte - 2, breedte - 2);
-           if(true)
-               g.setColor(Color.RED);
-           else
-               g.setColor(Color.GREEN);
+            g.setColor(Color.YELLOW);
             gr.drawRoundRect(vakUnderMouse.getX() * breedte + offset, vakUnderMouse.getY() * breedte + offset, breedte, breedte, 5, 5);
-            
+
         }
 
     }
@@ -140,6 +151,11 @@ public class BordPaneel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                formMousePressed(evt);
+            }
+        });
         addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseMoved(java.awt.event.MouseEvent evt) {
                 formMouseMoved(evt);
@@ -164,11 +180,42 @@ public class BordPaneel extends javax.swing.JPanel {
 //        this.repaint();
     }//GEN-LAST:event_formMouseMoved
 
+    private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
+
+        vak vak = getVakUnderMouse(evt.getX(), evt.getY());
+        if (vak != null) {
+            if (vakken.contains(vak)) {
+
+                if (setWall) {
+                    vak.setMuur(true);
+                } else {
+                    domeinC.getSpel().moveCurrentPlayerTo(vak);
+                }
+                if(domeinC.goToNextGameStep())
+                {
+                    JOptionPane.showMessageDialog(this, domeinC.getSpel().CurrentPlayer().getNaam() + " is gewonnen!");
+                }
+                vakken.clear();
+            }
+
+        }
+        paintGame();
+
+    }//GEN-LAST:event_formMousePressed
+
     public vak getVakUnderMouse(int x, int y) {
         if (domeinC == null || domeinC.getSpel() == null) {
             return null;
         }
         return domeinC.getSpel().getVak(x / breedte, y / breedte);
+
+    }
+
+    private void drawMuren() {
+        for (vak vak : domeinC.getSpel().getMuurVakken()) {
+            gr.setColor(Color.BLACK);
+            fillVak(vak);
+        }
 
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

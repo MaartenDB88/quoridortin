@@ -78,6 +78,7 @@ public class SpelerSetting extends javax.swing.JDialog {
             fillComboBox();
         } else {
             this.setVisible(false);
+            
         }
     }
 
