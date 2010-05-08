@@ -88,12 +88,12 @@ public class BordPaneel extends javax.swing.JPanel {
     }
 
     private void paintGame() {
+        clearBoard();
         if (gameStarted) {
             dimensie = domeinC.getSpel().getDimensie();
             int breedteTest = this.getWidth() / dimensie;
             int hoogteTest = this.getHeight() / dimensie;
             breedte = (breedteTest > hoogteTest ? hoogteTest : breedteTest);
-            clearBoard();
             drawBackground(gr);
             drawMuren();
             paintHuidigBord(gr);
@@ -187,15 +187,24 @@ public class BordPaneel extends javax.swing.JPanel {
             if (vakken.contains(vak)) {
 
                 if (setWall) {
+                    domeinC.getSpel().CurrentPlayer().setMuur(domeinC.getSpel().CurrentPlayer().getMuur() - 1);
                     vak.setMuur(true);
                 } else {
                     domeinC.getSpel().moveCurrentPlayerTo(vak);
                 }
-                if(domeinC.goToNextGameStep())
-                {
+                if (domeinC.goToNextGameStep()) {
                     JOptionPane.showMessageDialog(this, domeinC.getSpel().CurrentPlayer().getNaam() + " is gewonnen!");
+                    gameStarted = false;
                 }
                 vakken.clear();
+            } else {
+                Pion pion = vak.getPion();
+                if (pion != null) {
+                    if (domeinC.getSpel().CurrentPlayer().getPion() == pion) {
+                        setWall = false;
+                        vakken = domeinC.getSpel().pawnMoves(pion);
+                    }
+                }
             }
 
         }

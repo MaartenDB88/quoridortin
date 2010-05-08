@@ -1,8 +1,6 @@
 package domein;
 
 import java.awt.Color;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Pion {
 
@@ -10,6 +8,7 @@ public class Pion {
     private String symbool;
     private vak huidig;
     private vak start;
+    
     private Kleuren kleur;
 
     public void setStart(vak start) {
