@@ -6,6 +6,7 @@ public class Speler {
     private Pion pion;
     private int nummer;
     private int muren;
+    private int gameStep = 01;
 
     public Speler(int nr, String Nm) {
         this.nummer = nr;
@@ -52,5 +53,13 @@ public class Speler {
 
     public int getMuur() {
         return muren;
+    }
+
+    public int getGameStep() {
+        return gameStep;
+    }
+
+    void nextStep() {
+        gameStep++;
     }
 }

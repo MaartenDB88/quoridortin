@@ -132,34 +132,59 @@ public class Spel {
     }
 
     boolean goToNextStep() {
-        if (CurrentPlayer.getPion().getStart().getX() == 0) {
-            if (CurrentPlayer.getPion().getHuidig().getX() == dimensie - 1) {
-                return true;
+        if (CurrentPlayer.getPion().getStart().getX() == dimensie / 2) {
+            if (CurrentPlayer.getPion().getStart().getY() == 0) {
+
+                if (CurrentPlayer.getPion().getHuidig().getY() == dimensie - 1) {
+                    return true;
+                }
+            } else {
+
+                if (CurrentPlayer.getPion().getHuidig().getY() == 0) {
+                    return true;
+                }
+
             }
 
         } else {
-            if (CurrentPlayer.getPion().getHuidig().getY() == dimensie - 1) {
-                return true;
+            if (CurrentPlayer.getPion().getStart().getX() == 0) {
+
+                if (CurrentPlayer.getPion().getHuidig().getX() == dimensie - 1) {
+
+                    return true;
+                }
+            } else {
+
+                if (CurrentPlayer.getPion().getHuidig().getX() == 0) {
+                    return true;
+                }
+
             }
         }
-        nextPlayer();
 
+
+        nextPlayer();
         return false;
     }
 
     private void checkVak(vak vakToCheck, List<vak> vakken) {
         if (!vakToCheck.isMuur()) {
-            vakken.add(vakToCheck);
+            if (vakToCheck.getPion() == null) {
+                vakken.add(vakToCheck);
+            }
         }
     }
 
     private void nextPlayer() {
         int nextPlayerId = CurrentPlayer.getNummer();
+           CurrentPlayer.nextStep();
         nextPlayerId++;
+
         if (nextPlayerId >= spelers.size()) {
             nextPlayerId = 0;
         }
         setCurrentPlayerID(nextPlayerId);
+     
     }
 
     String getNextGameStep() {
@@ -175,7 +200,8 @@ public class Spel {
         vak vakToCheck;
         if (y != 0) {
             vakToCheck = vakkenBord[x][y - 1];
-            checkVak(vakToCheck, vakken);
+            checkVak(
+                    vakToCheck, vakken);
         }
         //ONDER
         if (y + 1 < dimensie) {
@@ -198,14 +224,13 @@ public class Spel {
     public List<vak> getMogelijkeMuurVakken() {
         List<vak> vakken = new ArrayList<vak>();
         vak[][] vakkenBord = bord.getSpeelBord();
-           for(vak[] vakLijst1:vakkenBord)
-           {
-                for(vak vak :vakLijst1)
-                {
-                    if(!vak.isMuur() && vak.getPion() ==null)
-                        vakken.add(vak);
+        for (vak[] vakLijst1 : vakkenBord) {
+            for (vak vak : vakLijst1) {
+                if (!vak.isMuur() && vak.getPion() == null) {
+                    vakken.add(vak);
                 }
-           }
+            }
+        }
 
         return vakken;
     }
@@ -213,24 +238,21 @@ public class Spel {
     public List<vak> getMuurVakken() {
         List<vak> vakken = new ArrayList<vak>();
         vak[][] vakkenBord = bord.getSpeelBord();
-           for(vak[] vakLijst1:vakkenBord)
-           {
-                for(vak vak :vakLijst1)
-                {
-                    if(vak.isMuur())
-                        vakken.add(vak);
+        for (vak[] vakLijst1 : vakkenBord) {
+            for (vak vak : vakLijst1) {
+                if (vak.isMuur()) {
+                    vakken.add(vak);
                 }
-           }
+            }
+        }
 
         return vakken;
     }
 
-    public void moveCurrentPlayerTo(vak vak)
-    {
+    public void moveCurrentPlayerTo(vak vak) {
         CurrentPlayer.getPion().getHuidig().setPion(null);
         CurrentPlayer.getPion().setHuidig(vak);
-        vak.setPion( CurrentPlayer.getPion());
-         
+        vak.setPion(CurrentPlayer.getPion());
     }
 }
 
