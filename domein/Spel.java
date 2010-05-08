@@ -63,8 +63,8 @@ public class Spel {
         return spelers;
     }
 
-    public int CurrentPlayerID() {
-        return CurrentPlayer.getNummer();
+    public Speler CurrentPlayer() {
+        return CurrentPlayer;
     }
 
     public void setCurrentPlayerID(int ID) {
@@ -114,6 +114,7 @@ public class Spel {
                     break;
                 case 2:
                     start = bord.getSpeelBord()[dimensie / 2][dimensie - 1];
+
 
                     break;
                 case 3:
@@ -165,7 +166,7 @@ public class Spel {
         return "";
     }
 
-    public List<vak> mogelijkeZetten(Pion pion) {
+    public List<vak> pawnMoves(Pion pion) {
         List<vak> vakken = new ArrayList<vak>();
         vak[][] vakkenBord = bord.getSpeelBord();
         int x = pion.getHuidig().getX();
@@ -177,7 +178,7 @@ public class Spel {
             checkVak(vakToCheck, vakken);
         }
         //ONDER
-        if (y+1 < dimensie) {
+        if (y + 1 < dimensie) {
             vakToCheck = vakkenBord[x][y + 1];
             checkVak(vakToCheck, vakken);
         }
@@ -187,11 +188,49 @@ public class Spel {
             checkVak(vakToCheck, vakken);
         }
         //RECHTS
-        if (x+1 < dimensie) {
+        if (x + 1 < dimensie) {
             vakToCheck = vakkenBord[x + 1][y];
             checkVak(vakToCheck, vakken);
         }
         return vakken;
+    }
+
+    public List<vak> getMogelijkeMuurVakken() {
+        List<vak> vakken = new ArrayList<vak>();
+        vak[][] vakkenBord = bord.getSpeelBord();
+           for(vak[] vakLijst1:vakkenBord)
+           {
+                for(vak vak :vakLijst1)
+                {
+                    if(!vak.isMuur() && vak.getPion() ==null)
+                        vakken.add(vak);
+                }
+           }
+
+        return vakken;
+    }
+
+    public List<vak> getMuurVakken() {
+        List<vak> vakken = new ArrayList<vak>();
+        vak[][] vakkenBord = bord.getSpeelBord();
+           for(vak[] vakLijst1:vakkenBord)
+           {
+                for(vak vak :vakLijst1)
+                {
+                    if(vak.isMuur())
+                        vakken.add(vak);
+                }
+           }
+
+        return vakken;
+    }
+
+    public void moveCurrentPlayerTo(vak vak)
+    {
+        CurrentPlayer.getPion().getHuidig().setPion(null);
+        CurrentPlayer.getPion().setHuidig(vak);
+        vak.setPion( CurrentPlayer.getPion());
+         
     }
 }
 
