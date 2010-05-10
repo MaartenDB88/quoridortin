@@ -164,7 +164,7 @@ public class ConsoleInterface {
 
 
         }
-        domeinController.maakNieuweSpeler(spelers);
+        domeinController.maakNieuweSpeler(spelers,10);
 
     }
 }
