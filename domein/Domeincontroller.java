@@ -16,8 +16,24 @@ public class Domeincontroller {
     }
 
     public Domeincontroller() {
-        //   persistentieBeheerder = PersistentieBeheerder.getInstance();
+        persistentieBeheerder = PersistentieBeheerder.getInstance();
         db = new DomeinBeheerder();
+    }
+
+    public boolean saveGame(String naam) {
+        persistentieBeheerder.spelOpslaan(naam, spel);
+        return true;
+    }
+
+    public boolean loadGame(String naam) {
+        spel = persistentieBeheerder.getSpel(naam);
+        spel.StartSpel();
+        return true;
+
+    }
+
+    public List<String> getSavedGamesName() {
+        return persistentieBeheerder.getSaveGames();
     }
 
     public void createBord(int dimensie) {
@@ -31,7 +47,6 @@ public class Domeincontroller {
     public String getBordPaneel() {
         return spel.getBord().toString();
     }
-
 
     public boolean controleerSpelerNaam(List<Speler> spelers, String naamKeuze) {
 
@@ -56,27 +71,31 @@ public class Domeincontroller {
         return kleuren;
     }
 
-    public void maakNieuweSpeler(List<Speler> spelers)
-    {
-        spel.maakSpelers(spelers);
+    public void maakNieuweSpeler(List<Speler> spelers, int wallCount) {
+        spel.maakSpelers(spelers, wallCount);
     }
 
     public List<String[]> getPionInfo() {
         return spel.getPionInfo();
     }
-    public List<Pion> getPionen()
-    {
+
+    public List<Pion> getPionen() {
         return db.getPion();
     }
 
     public boolean goToNextGameStep() {
-       return spel.goToNextStep();
-        
+        return spel.goToNextStep();
+
     }
-    public String getNextGameStep()
-    {
-       return spel.getNextGameStep();
-      
+
+    public String getNextGameStep() {
+        return spel.getNextGameStep();
+
+    }
+
+    public void setMuur(vak vak) {
+
+        spel.setMuur(vak);
     }
 }
 

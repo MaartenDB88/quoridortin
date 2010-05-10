@@ -12,6 +12,7 @@ package gui.grafisch;
 
 import domein.Domeincontroller;
 import domein.Pion;
+import domein.Spel.MuurPlaatsen;
 import domein.Speler;
 import domein.vak;
 import java.awt.Color;
@@ -89,15 +90,16 @@ public class BordPaneel extends javax.swing.JPanel {
 
     private void paintGame() {
         clearBoard();
-        if (gameStarted) {
+        if (gameStarted && dimensie !=0 && domeinC !=null) {
             dimensie = domeinC.getSpel().getDimensie();
             int breedteTest = this.getWidth() / dimensie;
             int hoogteTest = this.getHeight() / dimensie;
             breedte = (breedteTest > hoogteTest ? hoogteTest : breedteTest);
             drawBackground(gr);
             drawMuren();
-            paintHuidigBord(gr);
             drawMogelijkeZetten();
+            paintHuidigBord(gr);
+            
         }
     }
 
@@ -121,6 +123,11 @@ public class BordPaneel extends javax.swing.JPanel {
         if (vakUnderMouse != null) {
             g.setColor(Color.YELLOW);
             gr.drawRoundRect(vakUnderMouse.getX() * breedte + offset, vakUnderMouse.getY() * breedte + offset, breedte, breedte, 5, 5);
+            if (setWall && vakken.contains(vakUnderMouse)) {
+                gr.setColor(Color.BLACK);
+                for(vak vak : domeinC.getSpel().muurVakken(vakUnderMouse))
+                    fillVak(vak);
+            }
 
         }
 
@@ -182,13 +189,16 @@ public class BordPaneel extends javax.swing.JPanel {
 
     private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
 
+        if(evt.getButton() !=1)
+            return;
         vak vak = getVakUnderMouse(evt.getX(), evt.getY());
         if (vak != null) {
             if (vakken.contains(vak)) {
 
                 if (setWall) {
+                    domeinC.setMuur(vak);
                     domeinC.getSpel().CurrentPlayer().setMuur(domeinC.getSpel().CurrentPlayer().getMuur() - 1);
-                    vak.setMuur(true);
+                    
                 } else {
                     domeinC.getSpel().moveCurrentPlayerTo(vak);
                 }

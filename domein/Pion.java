@@ -20,20 +20,17 @@ public class Pion {
         return start;
     }
 
-    public Pion(String kl)//vak strt, vak hui)
+    public Pion(String kl)
     {
-
         SetKleurString(kl.toString());
-        //start = strt;
-        //huidig = hui;
+
     }
 
-    public Pion(String sym, String kl)//vak strt, vak hui)
+    public Pion(String sym, String kl)
     {
         symbool = sym;
         SetKleurString(kl);
-        //start = strt;
-        //huidig = hui;
+
     }
 
     public String getKleurString() {

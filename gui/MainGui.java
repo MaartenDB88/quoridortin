@@ -1,36 +1,46 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
- * MainGui.java
- *
- * Created on 6-mei-2010, 20:00:27
- */
 package gui;
 
 import domein.Domeincontroller;
 import domein.Pion;
+import domein.Spel.MuurPlaatsen;
 import domein.vak;
+import gui.grafisch.LoadGame;
 import gui.grafisch.NewGame;
+import gui.grafisch.SaveGame;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
+import javax.swing.JOptionPane;
 
-/**
- *
- * @author Admin
- */
 public class MainGui extends javax.swing.JFrame {
 
     /** Creates new form MainGui */
     NewGame newGame;
     Domeincontroller domeinC;
     List<vak> vakken;
+    ResourceBundle message;
 
-    public MainGui() {
+    public MainGui(ResourceBundle message) {
+        this.message = message;
         initComponents();
 
         domeinC = new Domeincontroller();
+        disableButtons(false);
+
+    }
+
+    private void disableButtons(boolean value) {
+        this.jButton1.setEnabled(value);
+        this.jButton2.setEnabled(value);
+        this.jButton3.setEnabled(value);
+        this.jButtonDraai.setEnabled(value);
+    }
+
+    private void draaiMuur() {
+        domeinC.getSpel().veranderMuurPlaatsen();
+        bordPaneel1.setVakken(domeinC.getSpel().getMogelijkeMuurVakken());
+        bordPaneel1.setWall(true);
+        bordPaneel1.repaint();
     }
 
     /** This method is called from within the constructor to
@@ -42,6 +52,7 @@ public class MainGui extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroupWall = new javax.swing.ButtonGroup();
         bordPaneel1 = new gui.grafisch.BordPaneel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -54,13 +65,18 @@ public class MainGui extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jLabelPion = new javax.swing.JLabel();
         jLabelPionKleur = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
+        jButtonDraai = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItemSave = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
+        jMenuLanguage = new javax.swing.JMenu();
+        jMenuItemFrans = new javax.swing.JMenuItem();
+        jMenuItemEngels = new javax.swing.JMenuItem();
+        jMenuItemNedl = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -75,11 +91,11 @@ public class MainGui extends javax.swing.JFrame {
         bordPaneel1.setLayout(bordPaneel1Layout);
         bordPaneel1Layout.setHorizontalGroup(
             bordPaneel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 394, Short.MAX_VALUE)
+            .addGap(0, 428, Short.MAX_VALUE)
         );
         bordPaneel1Layout.setVerticalGroup(
             bordPaneel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 365, Short.MAX_VALUE)
+            .addGap(0, 404, Short.MAX_VALUE)
         );
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -106,64 +122,88 @@ public class MainGui extends javax.swing.JFrame {
 
         jLabelPion.setText("Pion kleur:");
 
+        jButton3.setText("Skip");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButtonDraai.setText("Draai");
+        jButtonDraai.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonDraaiActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(146, 146, 146))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)
-                        .addGap(146, 146, 146))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel3)
-                                .addComponent(jLabelPion)))
+                            .addComponent(jLabelPion)
+                            .addComponent(jLabel3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabelPionKleur, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelWallsLeft, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelSpelerNaam, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelSTEP, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabelWallsLeft, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jLabelSpelerNaam, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                                .addComponent(jLabelPionKleur, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabelSTEP, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGap(23, 23, 23))))
+                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonDraai)
+                        .addGap(87, 87, 87)))
+                .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(201, 201, 201))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelSpelerNaam, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabelSpelerNaam, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabelPion)
                     .addComponent(jLabelPionKleur, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(14, 14, 14)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabelWallsLeft, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabelSTEP, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(69, 69, 69)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2)
+                        .addGap(39, 39, 39))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabelWallsLeft, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelSTEP, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(42, 42, 42)))
                 .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton2)
-                .addContainerGap(121, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2)
+                    .addComponent(jButtonDraai))
+                .addGap(27, 27, 27)
+                .addComponent(jButton3)
+                .addGap(147, 147, 147))
         );
 
         jMenu1.setText("File");
 
-        jMenuItem1.setText("New game");
+        jMenuItem1.setText(message.getString("nieuw"));
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
@@ -171,19 +211,44 @@ public class MainGui extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem1);
 
-        jMenuItem2.setText("Load game");
+        jMenuItem2.setText(message.getString("laad"));
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem2);
 
         jMenuItemSave.setText("Save game");
+        jMenuItemSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemSaveActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItemSave);
 
         jMenuItem3.setText("Exit");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem3);
 
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
+        jMenuLanguage.setText("Language");
+
+        jMenuItemFrans.setText("Français");
+        jMenuLanguage.add(jMenuItemFrans);
+
+        jMenuItemEngels.setText("English");
+        jMenuLanguage.add(jMenuItemEngels);
+
+        jMenuItemNedl.setText("Nederlands");
+        jMenuLanguage.add(jMenuItemNedl);
+
+        jMenuBar1.add(jMenuLanguage);
 
         setJMenuBar(jMenuBar1);
 
@@ -194,7 +259,7 @@ public class MainGui extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(bordPaneel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -208,17 +273,26 @@ public class MainGui extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         newGame = new NewGame(this, true, domeinC);
         newGame.setVisible(true);
-        newGame.toFront();
+        if (newGame.isCancelPressed()) {
+            return;
+        }
+
         domeinC.createBord(newGame.getGameSize());
-        domeinC.maakNieuweSpeler(newGame.getSpelerS().getSpelers());
+        domeinC.maakNieuweSpeler(newGame.getSpelerS().getSpelers(), newGame.getWallCount());
+        domeinC.getSpel().setWallLength(newGame.getWallSize());
         domeinC.getSpel().StartSpel();
         bordPaneel1.setDomeinC(domeinC);
         bordPaneel1.setGameStarted(true);
+        bordPaneel1.setVakken(new ArrayList<vak>());
         bordPaneel1.repaint();
         updateLabels();
+        disableButtons(true);
     }
 
     public void updateLabels() {
+        if (domeinC.getSpel() == null) {
+            return;
+        }
         jLabelSpelerNaam.setText(domeinC.getSpel().CurrentPlayer().getNaam());
         jLabelWallsLeft.setText(String.valueOf(domeinC.getSpel().CurrentPlayer().getMuur()));
         jLabelSTEP.setText(String.valueOf(domeinC.getSpel().CurrentPlayer().getGameStep()));
@@ -245,25 +319,77 @@ public class MainGui extends javax.swing.JFrame {
 
     private void bordPaneel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bordPaneel1MouseClicked
 
-        updateLabels();
+        if (domeinC.getSpel() != null) {
+            updateLabels();
+            if (evt.getButton() == 3) {
+                draaiMuur();
+            }
+        }
+
 
     }//GEN-LAST:event_bordPaneel1MouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
 
-            public void run() {
-                new MainGui().setVisible(true);
-            }
-        });
-    }
+        domeinC.getSpel().nextPlayer();
+        bordPaneel1.setVakken(new ArrayList<vak>());
+        bordPaneel1.repaint();
+        updateLabels();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButtonDraaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDraaiActionPerformed
+        draaiMuur();
+
+    }//GEN-LAST:event_jButtonDraaiActionPerformed
+
+    private void jMenuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSaveActionPerformed
+        SaveGame saveGame = new SaveGame(this, true);
+        saveGame.setVisible(true);
+        String naam = saveGame.getGameNaam();
+        if (naam != null) {
+            domeinC.saveGame(naam);
+        }
+
+
+    }//GEN-LAST:event_jMenuItemSaveActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+
+        LoadGame load = new LoadGame(this, true);
+
+        load.setGames(domeinC.getSavedGamesName());
+        load.setVisible(true);
+        if (load.isCancelPressed()) {
+            return;
+        }
+        String gameNaam = load.getGameNaam();
+        if (domeinC.loadGame(gameNaam)) {
+            bordPaneel1.setDomeinC(domeinC);
+            bordPaneel1.setGameStarted(true);
+            bordPaneel1.repaint();
+            bordPaneel1.setVakken(new ArrayList<vak>());
+
+        }
+        disableButtons(true);
+        updateLabels();
+
+
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+
+        if (JOptionPane.showConfirmDialog(this, "Are you sure you want to exit?", "Confirm", 0) == 0) {
+            this.dispose();
+        }
+
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private gui.grafisch.BordPaneel bordPaneel1;
+    private javax.swing.ButtonGroup buttonGroupWall;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButtonDraai;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -273,12 +399,15 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelSpelerNaam;
     private javax.swing.JLabel jLabelWallsLeft;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItemEngels;
+    private javax.swing.JMenuItem jMenuItemFrans;
+    private javax.swing.JMenuItem jMenuItemNedl;
     private javax.swing.JMenuItem jMenuItemSave;
+    private javax.swing.JMenu jMenuLanguage;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }
